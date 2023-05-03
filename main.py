@@ -8,10 +8,20 @@ import pygame
 import math as m
 import numpy as np
 
-GREEN = (100,250,100)
+GREEN = (90,180,90)
+MOSGREEN = (70,100,70)
 BLUE = (180,180,250)
 BLACK = (0,0,0)
 WHITE = (240,240,240)
+
+
+def millor_x(x):
+    return np.array([
+        [-1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1],
+    ])
+
 
 def tr(vec):
     x,y = vec[0],vec[1]
@@ -70,11 +80,11 @@ class GameLoop(GameState):
         self.textRectObj.center = (300,430)
 
         self.posx = 0
-
-    def door(self,key):
         self.DOORSIZE = (140,240)
         self.WINDOWSIZE = (self.DOORSIZE[0]*0.5,self.DOORSIZE[1]*0.43)
         self.YPOS = 200
+
+    def door(self,key):
 
         if key == pygame.K_o:
             print("open")
@@ -94,6 +104,10 @@ class GameLoop(GameState):
         draw_center_rect(door_r,self.DOORSIZE,GREEN)
         wpos = np.dot(tr(door_r),window_align)
         draw_center_rect(wpos,self.WINDOWSIZE,BLUE)
+
+        draw_center_rect(np.array([90,door_l[1],1]),(180,self.DOORSIZE[1]),MOSGREEN)
+        draw_center_rect(millor_x(640//2) @ np.array([90,door_l[1],1]),(180,self.DOORSIZE[1]),MOSGREEN)
+        #draw_center_rect(np.array([90,door_l[1],1]),(180,self.DOORSIZE[1]),MOSGREEN)
 
 
     def do(self,key):
