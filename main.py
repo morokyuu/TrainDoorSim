@@ -16,22 +16,38 @@ class GameState:
         return
 
 
+class Title(GameState):
+    def __init__(self):
+        font = pygame.font.Font('freesansbold.ttf', 60)
+        self.textSurfaceObj = font.render("Train Door",True,GREEN,BLUE)
+        self.textRectObj = self.textSurfaceObj.get_rect()
+        self.textRectObj.center = (300, 200)
+
+    def do(self,key):
+        DISPLAYSURF.fill(WHITE)
+        DISPLAYSURF.blit(self.textSurfaceObj, self.textRectObj)
+
+        if key == pygame.K_SPACE:
+            print("start")
+            return True
+        return False
+
+
 class GameLoop(GameState):
     def __init__(self):
         font = pygame.font.Font('freesansbold.ttf', 30)
         self.textSurfaceObj = font.render("push o button",True,GREEN,BLUE)
         self.textRectObj = self.textSurfaceObj.get_rect()
+        self.textRectObj.center = (300,300)
 
     def do(self,key):
         DISPLAYSURF.fill(WHITE)
         DISPLAYSURF.blit(self.textSurfaceObj,self.textRectObj)
-        self.textRectObj.center = (300,300)
 
         if key == pygame.K_o:
             print("open")
-        else:
-            pass
-        return
+            return True
+        return False
 
 
 # Press the green button in the gutter to run the script.
@@ -46,7 +62,7 @@ if __name__ == '__main__':
     pygame.display.set_caption('Train Door simulator')
 
     running = True
-    g = GameLoop()
+    g = Title()
 
     while running:
         key = None
@@ -61,7 +77,8 @@ if __name__ == '__main__':
                 else:
                     key = event.key
 
-        g.do(key)
+        if g.do(key):
+            g = GameLoop()
         pygame.display.update()
         clock.tick(30)
 
