@@ -15,7 +15,7 @@ BLACK = (0,0,0)
 WHITE = (240,240,240)
 
 
-def millor_x():
+def mirror_x():
     return np.array([
         [-1, 0, 0],
         [0, 1, 0],
@@ -95,12 +95,15 @@ class GameLoop(GameState):
 
         game_cord = np.array([640//2, self.YPOS, 1])
         door_r = tr(np.array([self.posx,0])) @ np.array([self.DOORSIZE[0]//2, 0,1])
+        door_l = mirror_x() @ tr(np.array([self.posx,0])) @ np.array([self.DOORSIZE[0]//2, 0,1])
+
         window_align = np.array([0,-40,1])
 
         draw_center_rect(tr(game_cord) @ door_r,self.DOORSIZE,GREEN)
-        wpos = tr(door_r) @ window_align
-        draw_center_rect(tr(game_cord) @ wpos, self.WINDOWSIZE, BLUE)
+        draw_center_rect(tr(game_cord) @ tr(window_align) @ door_r, self.WINDOWSIZE, BLUE)
 
+        draw_center_rect(tr(game_cord) @ door_l,self.DOORSIZE,GREEN)
+        draw_center_rect(tr(game_cord) @ tr(window_align) @ door_l, self.WINDOWSIZE, BLUE)
 
 #        draw_center_rect(np.array([90,door_l[1],1]),(180,self.DOORSIZE[1]),MOSGREEN)
 #        draw_center_rect(millor_x(640//2) @ np.array([90,door_l[1],1]),(180,self.DOORSIZE[1]),MOSGREEN)
