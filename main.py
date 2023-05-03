@@ -52,7 +52,9 @@ class GameLoop(GameState):
 
     def door(self,key):
         WIDTH = 140
-        HIGHT = 240
+        HEIGHT = 240
+        DOORSIZE = (WIDTH,HEIGHT)
+        WINDOWSIZE = (WIDTH*0.43,HEIGHT*0.43)
         YPOS = 80
 
         if key == pygame.K_o:
@@ -62,8 +64,10 @@ class GameLoop(GameState):
             print("close")
             self.posx = 0
 
-        pygame.draw.rect(DISPLAYSURF,GREEN,pygame.Rect((640//2-WIDTH - self.posx,YPOS),(WIDTH,HIGHT)))
-        pygame.draw.rect(DISPLAYSURF,GREEN,pygame.Rect((640//2 + self.posx,YPOS),(WIDTH,HIGHT)))
+        pygame.draw.rect(DISPLAYSURF,GREEN,pygame.Rect((640//2-WIDTH - self.posx,YPOS),DOORSIZE))
+        pygame.draw.rect(DISPLAYSURF,BLUE,pygame.Rect((640//2-WIDTH - self.posx,YPOS),WINDOWSIZE))
+        pygame.draw.rect(DISPLAYSURF,GREEN,pygame.Rect((640//2 + self.posx,YPOS),DOORSIZE))
+        pygame.draw.rect(DISPLAYSURF,BLUE,pygame.Rect((640//2 + self.posx,YPOS),WINDOWSIZE))
 
         self.count += 1
 
@@ -71,9 +75,6 @@ class GameLoop(GameState):
     def do(self,key):
         DISPLAYSURF.fill(WHITE)
         DISPLAYSURF.blit(self.textSurfaceObj,self.textRectObj)
-
-
-
         self.door(key)
 
         return False
