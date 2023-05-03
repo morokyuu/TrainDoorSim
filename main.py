@@ -86,23 +86,17 @@ class GameLoop(GameState):
             print("close")
             self.posx = 0
 
-        door_l = np.array([640//2-DOORSIZE[0]//2, 200,1])
-        door_r = np.array([640//2+DOORSIZE[0]//2, 200,1])
-
-        #pygame.draw.rect(DISPLAYSURF,GREEN,pygame.Rect((0,0),DOORSIZE))
+        door_l = np.array([640//2-DOORSIZE[0]//2-self.posx, 200,1])
+        door_r = np.array([640//2+DOORSIZE[0]//2+self.posx, 200,1])
+        window_align = np.array([0,-40,1])
 
         draw_center_rect(door_l,DOORSIZE,GREEN)
-        wpos = np.dot(tr(door_l),np.array([0,-40,1]))
+        wpos = np.dot(tr(door_l),window_align)
         draw_center_rect(wpos, WINDOWSIZE, BLUE)
 
         draw_center_rect(door_r,DOORSIZE,GREEN)
-        wpos = np.dot(tr(door_r),np.array([0,-40,1]))
+        wpos = np.dot(tr(door_r),window_align)
         draw_center_rect(wpos,WINDOWSIZE,BLUE)
-
-#        pygame.draw.rect(DISPLAYSURF,GREEN,pygame.Rect((640//2-WIDTH - self.posx,YPOS),DOORSIZE))
-#        pygame.draw.rect(DISPLAYSURF,BLUE,pygame.Rect((640//2-WIDTH - self.posx,YPOS),WINDOWSIZE))
-#        pygame.draw.rect(DISPLAYSURF,GREEN,pygame.Rect((640//2 + self.posx,YPOS),DOORSIZE))
-#        pygame.draw.rect(DISPLAYSURF,BLUE,pygame.Rect((640//2 + self.posx,YPOS),WINDOWSIZE))
 
         self.count += 1
 
