@@ -12,23 +12,25 @@ BLACK = (0,0,0)
 WHITE = (240,240,240)
 
 class GameState:
-    def __init__(self):
-        return
-
-    def transition(self):
+    def do(self,key):
         return
 
 
-class GameLoop:
+class GameLoop(GameState):
     def __init__(self):
         font = pygame.font.Font('freesansbold.ttf', 30)
         self.textSurfaceObj = font.render("push o button",True,GREEN,BLUE)
         self.textRectObj = self.textSurfaceObj.get_rect()
 
-    def do(self):
+    def do(self,key):
         DISPLAYSURF.fill(WHITE)
         DISPLAYSURF.blit(self.textSurfaceObj,self.textRectObj)
         self.textRectObj.center = (300,300)
+
+        if key == pygame.K_o:
+            print("open")
+        else:
+            pass
         return
 
 
@@ -47,15 +49,19 @@ if __name__ == '__main__':
     g = GameLoop()
 
     while running:
-        g.do()
+        key = None
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_o:
-                    print("open")
+                if event.key == pygame.K_q:
+                    print("quit")
+                    running = False
+                else:
+                    key = event.key
 
+        g.do(key)
         pygame.display.update()
         clock.tick(30)
 
