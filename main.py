@@ -105,9 +105,10 @@ class GameLoop(GameState):
         draw_center_rect(door_l,self.DOORSIZE,GREEN)
         draw_center_rect(tr(window_align) @ door_l, self.WINDOWSIZE, BLUE)
 
-#        draw_center_rect(np.array([90,door_l[1],1]),(180,self.DOORSIZE[1]),MOSGREEN)
-#        draw_center_rect(millor_x(640//2) @ np.array([90,door_l[1],1]),(180,self.DOORSIZE[1]),MOSGREEN)
-        #draw_center_rect(np.array([90,door_l[1],1]),(180,self.DOORSIZE[1]),MOSGREEN)
+        wall_r = tr(game_cord) @ np.array([230,0,1])
+        draw_center_rect(wall_r,(180,self.DOORSIZE[1]),MOSGREEN)
+        wall_l = tr(game_cord) @ mirror_x() @ np.array([230,0,1])
+        draw_center_rect(wall_l,(180,self.DOORSIZE[1]),MOSGREEN)
 
 
     def do(self,key):
