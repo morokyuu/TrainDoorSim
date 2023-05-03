@@ -6,11 +6,33 @@
 from pygame.locals import *
 import pygame
 import math as m
+import numpy as np
 
 GREEN = (100,250,100)
 BLUE = (180,180,250)
 BLACK = (0,0,0)
 WHITE = (240,240,240)
+
+def tr(vec):
+    x,y = vec[0],vec[1]
+    return np.array([
+        [1, 0, x],
+        [0, 1, y],
+        [0, 0, 1],
+    ])
+
+
+def rot(th):
+    return np.array([
+        [np.cos(th), -np.sin(th), 0],
+        [np.sin(th),  np.cos(th), 0],
+        [0, 0, 1],
+    ])
+
+
+def draw_center_rect(vec,size,color):
+    pygame.draw.rect(DISPLAYSURF, color, pygame.Rect((vec[0]-size[0]/2.0,vec[1]-size[1]/2.0), size))
+
 
 class GameState:
     def do(self,key):
@@ -54,7 +76,7 @@ class GameLoop(GameState):
         WIDTH = 140
         HEIGHT = 240
         DOORSIZE = (WIDTH,HEIGHT)
-        WINDOWSIZE = (WIDTH*0.43,HEIGHT*0.43)
+        WINDOWSIZE = (WIDTH*0.5,HEIGHT*0.43)
         YPOS = 80
 
         if key == pygame.K_o:
@@ -64,10 +86,17 @@ class GameLoop(GameState):
             print("close")
             self.posx = 0
 
-        pygame.draw.rect(DISPLAYSURF,GREEN,pygame.Rect((640//2-WIDTH - self.posx,YPOS),DOORSIZE))
-        pygame.draw.rect(DISPLAYSURF,BLUE,pygame.Rect((640//2-WIDTH - self.posx,YPOS),WINDOWSIZE))
-        pygame.draw.rect(DISPLAYSURF,GREEN,pygame.Rect((640//2 + self.posx,YPOS),DOORSIZE))
-        pygame.draw.rect(DISPLAYSURF,BLUE,pygame.Rect((640//2 + self.posx,YPOS),WINDOWSIZE))
+        DPOS = np.array([640//2, 200,1])
+        WPOS = np.array([     0, -40,1])
+        WPOS = np.dot(tr(DPOS),WPOS)
+
+        #pygame.draw.rect(DISPLAYSURF,GREEN,pygame.Rect((0,0),DOORSIZE))
+        draw_center_rect(DPOS,DOORSIZE,GREEN)
+        draw_center_rect(WPOS,WINDOWSIZE,BLUE)
+#        pygame.draw.rect(DISPLAYSURF,GREEN,pygame.Rect((640//2-WIDTH - self.posx,YPOS),DOORSIZE))
+#        pygame.draw.rect(DISPLAYSURF,BLUE,pygame.Rect((640//2-WIDTH - self.posx,YPOS),WINDOWSIZE))
+#        pygame.draw.rect(DISPLAYSURF,GREEN,pygame.Rect((640//2 + self.posx,YPOS),DOORSIZE))
+#        pygame.draw.rect(DISPLAYSURF,BLUE,pygame.Rect((640//2 + self.posx,YPOS),WINDOWSIZE))
 
         self.count += 1
 
