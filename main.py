@@ -93,20 +93,16 @@ class GameLoop(GameState):
             print("close")
             self.posx = 0
 
-        door_l = np.array([640//2-self.DOORSIZE[0]//2-self.posx, self.YPOS,1])
-        door_r = np.array([640//2+self.DOORSIZE[0]//2+self.posx, self.YPOS,1])
+        game_cord = np.array([640//2 - self.DOORSIZE[0], 100, 1])
+        door = np.array([self.DOORSIZE[0]//2-self.posx, self.YPOS,1])
         window_align = np.array([0,-40,1])
 
-        draw_center_rect(door_l,self.DOORSIZE,GREEN)
-        wpos = np.dot(tr(door_l),window_align)
-        draw_center_rect(wpos, self.WINDOWSIZE, BLUE)
+        draw_center_rect(tr(game_cord) @ door,self.DOORSIZE,GREEN)
+        wpos = tr(door) @ window_align
+        draw_center_rect(tr(game_cord) @ wpos, self.WINDOWSIZE, BLUE)
 
-        draw_center_rect(door_r,self.DOORSIZE,GREEN)
-        wpos = np.dot(tr(door_r),window_align)
-        draw_center_rect(wpos,self.WINDOWSIZE,BLUE)
-
-        draw_center_rect(np.array([90,door_l[1],1]),(180,self.DOORSIZE[1]),MOSGREEN)
-        draw_center_rect(millor_x(640//2) @ np.array([90,door_l[1],1]),(180,self.DOORSIZE[1]),MOSGREEN)
+#        draw_center_rect(np.array([90,door_l[1],1]),(180,self.DOORSIZE[1]),MOSGREEN)
+#        draw_center_rect(millor_x(640//2) @ np.array([90,door_l[1],1]),(180,self.DOORSIZE[1]),MOSGREEN)
         #draw_center_rect(np.array([90,door_l[1],1]),(180,self.DOORSIZE[1]),MOSGREEN)
 
 
