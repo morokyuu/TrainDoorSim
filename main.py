@@ -5,6 +5,7 @@
 
 from pygame.locals import *
 import pygame
+import math as m
 
 GREEN = (100,250,100)
 BLUE = (180,180,250)
@@ -46,16 +47,36 @@ class GameLoop(GameState):
         self.textRectObj = self.textSurfaceObj.get_rect()
         self.textRectObj.center = (300,430)
 
+        self.count = 0
+        self.posx = 0
+
+    def door(self,key):
+        WIDTH = 140
+        HIGHT = 240
+        YPOS = 80
+
+        if key == pygame.K_o:
+            print("open")
+            self.posx = WIDTH
+        elif key == pygame.K_c:
+            print("close")
+            self.posx = 0
+
+        pygame.draw.rect(DISPLAYSURF,GREEN,pygame.Rect((640//2-WIDTH - self.posx,YPOS),(WIDTH,HIGHT)))
+        pygame.draw.rect(DISPLAYSURF,GREEN,pygame.Rect((640//2 + self.posx,YPOS),(WIDTH,HIGHT)))
+
+        self.count += 1
+
+
     def do(self,key):
         DISPLAYSURF.fill(WHITE)
         DISPLAYSURF.blit(self.textSurfaceObj,self.textRectObj)
 
-        if key == pygame.K_o:
-            print("open")
-        elif key == pygame.K_c:
-            print("close")
-        return False
 
+
+        self.door(key)
+
+        return False
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -69,7 +90,8 @@ if __name__ == '__main__':
     pygame.display.set_caption('Train Door simulator')
 
     running = True
-    g = Title()
+    #g = Title()
+    g = GameLoop()
 
     while running:
         key = None
@@ -84,8 +106,9 @@ if __name__ == '__main__':
                 else:
                     key = event.key
 
-        if g.do(key):
-            g = GameLoop()
+        g.do(key)
+#        if g.do(key):
+#            g = GameLoop()
         pygame.display.update()
         clock.tick(30)
 
