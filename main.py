@@ -69,36 +69,31 @@ class GameLoop(GameState):
         self.textRectObj = self.textSurfaceObj.get_rect()
         self.textRectObj.center = (300,430)
 
-        self.count = 0
         self.posx = 0
 
     def door(self,key):
-        WIDTH = 140
-        HEIGHT = 240
-        DOORSIZE = (WIDTH,HEIGHT)
-        WINDOWSIZE = (WIDTH*0.5,HEIGHT*0.43)
-        YPOS = 80
+        self.DOORSIZE = (140,240)
+        self.WINDOWSIZE = (self.DOORSIZE[0]*0.5,self.DOORSIZE[1]*0.43)
+        self.YPOS = 200
 
         if key == pygame.K_o:
             print("open")
-            self.posx = WIDTH
+            self.posx = self.DOORSIZE[0]
         elif key == pygame.K_c:
             print("close")
             self.posx = 0
 
-        door_l = np.array([640//2-DOORSIZE[0]//2-self.posx, 200,1])
-        door_r = np.array([640//2+DOORSIZE[0]//2+self.posx, 200,1])
+        door_l = np.array([640//2-self.DOORSIZE[0]//2-self.posx, self.YPOS,1])
+        door_r = np.array([640//2+self.DOORSIZE[0]//2+self.posx, self.YPOS,1])
         window_align = np.array([0,-40,1])
 
-        draw_center_rect(door_l,DOORSIZE,GREEN)
+        draw_center_rect(door_l,self.DOORSIZE,GREEN)
         wpos = np.dot(tr(door_l),window_align)
-        draw_center_rect(wpos, WINDOWSIZE, BLUE)
+        draw_center_rect(wpos, self.WINDOWSIZE, BLUE)
 
-        draw_center_rect(door_r,DOORSIZE,GREEN)
+        draw_center_rect(door_r,self.DOORSIZE,GREEN)
         wpos = np.dot(tr(door_r),window_align)
-        draw_center_rect(wpos,WINDOWSIZE,BLUE)
-
-        self.count += 1
+        draw_center_rect(wpos,self.WINDOWSIZE,BLUE)
 
 
     def do(self,key):
