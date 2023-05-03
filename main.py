@@ -18,14 +18,20 @@ class GameState:
 
 class Title(GameState):
     def __init__(self):
-        font = pygame.font.Font('freesansbold.ttf', 60)
+        font = pygame.font.Font('freesansbold.ttf', 100)
         self.textSurfaceObj = font.render("Train Door",True,GREEN,BLUE)
         self.textRectObj = self.textSurfaceObj.get_rect()
-        self.textRectObj.center = (300, 200)
+        self.textRectObj.center = (300, 170)
+
+        font = pygame.font.Font('freesansbold.ttf', 60)
+        self.messageSurfaceObj = font.render("HIT SPACE KEY",True,BLACK)
+        self.messageRectObj = self.messageSurfaceObj.get_rect()
+        self.messageRectObj.center = (300, 280)
 
     def do(self,key):
         DISPLAYSURF.fill(WHITE)
         DISPLAYSURF.blit(self.textSurfaceObj, self.textRectObj)
+        DISPLAYSURF.blit(self.messageSurfaceObj, self.messageRectObj)
 
         if key == pygame.K_SPACE:
             print("start")
@@ -36,9 +42,9 @@ class Title(GameState):
 class GameLoop(GameState):
     def __init__(self):
         font = pygame.font.Font('freesansbold.ttf', 30)
-        self.textSurfaceObj = font.render("push o button",True,GREEN,BLUE)
+        self.textSurfaceObj = font.render("o:open, c:close",True,GREEN,BLUE)
         self.textRectObj = self.textSurfaceObj.get_rect()
-        self.textRectObj.center = (300,300)
+        self.textRectObj.center = (300,430)
 
     def do(self,key):
         DISPLAYSURF.fill(WHITE)
@@ -46,7 +52,8 @@ class GameLoop(GameState):
 
         if key == pygame.K_o:
             print("open")
-            return True
+        elif key == pygame.K_c:
+            print("close")
         return False
 
 
