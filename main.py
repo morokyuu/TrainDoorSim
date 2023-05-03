@@ -93,21 +93,28 @@ class GameLoop(GameState):
         self.count = 0
         self.state = DoorState.CLOSE
         self.STEPMAX=50
+        self.prev_key = None
 
     def door(self,key):
-        if self.count > 0:
-            self.count += 1
-            if self.count > self.STEPMAX:
-                self.count = self.STEPMAX
-                print("full open")
-        else:
+        if self.state == DoorState.CLOSE:
             if key == pygame.K_o:
                 print("open")
-                self.count += 1
-            elif key == pygame.K_c:
+                self.state = DoorState.OPENNING
+        elif self.state == DoorState.OPENNING:
+            self.count += 3
+            if self.count > self.STEPMAX:
+                self.count = self.STEPMAX
+                self.state = DoorState.OPEN
+        elif self.state == DoorState.OPEN:
+            if key == pygame.K_c:
                 print("close")
-                if self.state == DoorState.CLOSE:
-                    self.state = DoorState.CLOSE
+                self.state = DoorState.CLOSING
+        elif self.state == DoorState.CLOSING:
+            if key == pygame.K_c:
+                print("closing")
+                self.count -= 3
+            else:
+                print("close cancel")
 
         self.posx = self.count / self.STEPMAX * self.DOORSIZE[0]
 
@@ -127,6 +134,9 @@ class GameLoop(GameState):
         draw_center_rect(wall_r,(180,self.DOORSIZE[1]),MOSGREEN)
         wall_l = tr(game_cord) @ mirror_x() @ np.array([230,0,1])
         draw_center_rect(wall_l,(180,self.DOORSIZE[1]),MOSGREEN)
+
+        self.prev_key = key
+        return
 
 
     def do(self,key):
