@@ -15,7 +15,7 @@ BLACK = (0,0,0)
 WHITE = (240,240,240)
 
 
-def millor_x(x):
+def millor_x():
     return np.array([
         [-1, 0, 0],
         [0, 1, 0],
@@ -93,12 +93,14 @@ class GameLoop(GameState):
             print("close")
             self.posx = 0
 
-        game_cord = np.array([640//2 - self.DOORSIZE[0], 100, 1])
-        door = np.array([self.DOORSIZE[0]//2-self.posx, self.YPOS,1])
+        game_cord = np.array([640//2 - self.DOORSIZE[0], self.YPOS, 1])
+        door_l = np.array([self.DOORSIZE[0]//2-self.posx, 0,1])
+        door_r = tr(np.array([self.DOORSIZE[0],0])) @ np.array([self.DOORSIZE[0]//2+self.posx, 0,1])
         window_align = np.array([0,-40,1])
 
-        draw_center_rect(tr(game_cord) @ door,self.DOORSIZE,GREEN)
-        wpos = tr(door) @ window_align
+        draw_center_rect(tr(game_cord) @ door_l,self.DOORSIZE,GREEN)
+        draw_center_rect(tr(game_cord) @ door_r,self.DOORSIZE,GREEN)
+        wpos = tr(door_l) @ window_align
         draw_center_rect(tr(game_cord) @ wpos, self.WINDOWSIZE, BLUE)
 
 #        draw_center_rect(np.array([90,door_l[1],1]),(180,self.DOORSIZE[1]),MOSGREEN)
