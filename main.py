@@ -7,6 +7,7 @@ from pygame.locals import *
 import pygame
 import math as m
 import numpy as np
+from enum import Enum
 
 GREEN = (90,180,90)
 MOSGREEN = (70,100,70)
@@ -72,6 +73,12 @@ class Title(GameState):
         return False
 
 
+class DoorState(Enum):
+    OPEN = 1
+    OPENNING = 2
+    CLOSE = 3
+    CLOSING = 4
+
 class GameLoop(GameState):
     def __init__(self):
         font = pygame.font.Font('freesansbold.ttf', 30)
@@ -83,15 +90,26 @@ class GameLoop(GameState):
         self.DOORSIZE = (140,240)
         self.WINDOWSIZE = (self.DOORSIZE[0]*0.5,self.DOORSIZE[1]*0.43)
         self.YPOS = 200
+        self.count = 0
+        self.state = DoorState.CLOSE
+        self.STEPMAX=50
 
     def door(self,key):
+        if self.count > 0:
+            self.count += 1
+            if self.count > self.STEPMAX:
+                self.count = self.STEPMAX
+                print("full open")
+        else:
+            if key == pygame.K_o:
+                print("open")
+                self.count += 1
+            elif key == pygame.K_c:
+                print("close")
+                if self.state == DoorState.CLOSE:
+                    self.state = DoorState.CLOSE
 
-        if key == pygame.K_o:
-            print("open")
-            self.posx = self.DOORSIZE[0]
-        elif key == pygame.K_c:
-            print("close")
-            self.posx = 0
+        self.posx = self.count / self.STEPMAX * self.DOORSIZE[0]
 
         game_cord = np.array([640//2, self.YPOS, 1])
         door_r = tr(game_cord) @ tr(np.array([self.posx,0])) @ np.array([self.DOORSIZE[0]//2, 0,1])
