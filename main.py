@@ -62,12 +62,14 @@ class Title(GameState):
         self.messageRectObj = self.messageSurfaceObj.get_rect()
         self.messageRectObj.center = (300, 280)
 
-    def do(self,key):
+    def do(self,keyev):
         DISPLAYSURF.fill(WHITE)
         DISPLAYSURF.blit(self.textSurfaceObj, self.textRectObj)
         DISPLAYSURF.blit(self.messageSurfaceObj, self.messageRectObj)
 
-        if key == pygame.K_SPACE:
+        if keyev == None:
+            pass
+        elif keyev.key == pygame.K_SPACE and keyev.type == pygame.KEYDOWN:
             print("start")
             return True
         return False
@@ -93,21 +95,37 @@ class GameLoop(GameState):
         self.count = 0
         self.state = DoorState.CLOSE
         self.STEPMAX=50
+        self.prev_key = None
 
-    def door(self,key):
-        if self.count > 0:
+    def door(self,keyev):
+        if self.state == DoorState.CLOSE:
+            if keyev == None:
+                pass
+            elif keyev.key == pygame.K_o and keyev.type == pygame.KEYDOWN:
+                print("open")
+                self.state = DoorState.OPENNING
+        elif self.state == DoorState.OPENNING:
             self.count += 1
             if self.count > self.STEPMAX:
                 self.count = self.STEPMAX
-                print("full open")
-        else:
-            if key == pygame.K_o:
-                print("open")
-                self.count += 1
-            elif key == pygame.K_c:
+                self.state = DoorState.OPEN
+        elif self.state == DoorState.OPEN:
+            if keyev == None:
+                pass
+            elif keyev.key == pygame.K_c and keyev.type == pygame.KEYDOWN:
                 print("close")
-                if self.state == DoorState.CLOSE:
-                    self.state = DoorState.CLOSE
+                self.state = DoorState.CLOSING
+        elif self.state == DoorState.CLOSING:
+            if keyev == None:
+                pass
+            elif keyev.key == pygame.K_c and keyev.type == pygame.KEYUP:
+                print("close cancel")
+                self.state = DoorState.OPENNING
+
+            self.count -= 1
+            if self.count < 0:
+                self.count = 0
+                self.state = DoorState.CLOSE
 
         self.posx = self.count / self.STEPMAX * self.DOORSIZE[0]
 
@@ -127,6 +145,8 @@ class GameLoop(GameState):
         draw_center_rect(wall_r,(180,self.DOORSIZE[1]),MOSGREEN)
         wall_l = tr(game_cord) @ mirror_x() @ np.array([230,0,1])
         draw_center_rect(wall_l,(180,self.DOORSIZE[1]),MOSGREEN)
+
+        return
 
 
     def do(self,key):
@@ -152,7 +172,7 @@ if __name__ == '__main__':
     g = GameLoop()
 
     while running:
-        key = None
+        keyev = None
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -162,9 +182,14 @@ if __name__ == '__main__':
                     print("quit")
                     running = False
                 else:
-                    key = event.key
+                    keyev = event
+            elif event.type == pygame.KEYUP:
+                keyev = event
 
-        g.do(key)
+        if not keyev is None:
+            print(keyev)
+
+        g.do(keyev)
 #        if g.do(key):
 #            g = GameLoop()
         pygame.display.update()
