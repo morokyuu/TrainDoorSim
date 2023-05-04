@@ -62,12 +62,14 @@ class Title(GameState):
         self.messageRectObj = self.messageSurfaceObj.get_rect()
         self.messageRectObj.center = (300, 280)
 
-    def do(self,key):
+    def do(self,keyev):
         DISPLAYSURF.fill(WHITE)
         DISPLAYSURF.blit(self.textSurfaceObj, self.textRectObj)
         DISPLAYSURF.blit(self.messageSurfaceObj, self.messageRectObj)
 
-        if key == pygame.K_SPACE:
+        if keyev == None:
+            pass
+        elif keyev.key == pygame.K_SPACE and keyev.type == pygame.KEYDOWN:
             print("start")
             return True
         return False
@@ -95,9 +97,11 @@ class GameLoop(GameState):
         self.STEPMAX=50
         self.prev_key = None
 
-    def door(self,key):
+    def door(self,keyev):
         if self.state == DoorState.CLOSE:
-            if key == pygame.K_o:
+            if keyev == None:
+                pass
+            elif keyev.key == pygame.K_o and keyev.type == pygame.KEYDOWN:
                 print("open")
                 self.state = DoorState.OPENNING
         elif self.state == DoorState.OPENNING:
@@ -106,13 +110,20 @@ class GameLoop(GameState):
                 self.count = self.STEPMAX
                 self.state = DoorState.OPEN
         elif self.state == DoorState.OPEN:
-            if key == pygame.K_c:
+            if keyev == None:
+                pass
+            elif keyev.key == pygame.K_c and keyev.type == pygame.KEYDOWN:
                 print("close")
                 self.state = DoorState.CLOSING
         elif self.state == DoorState.CLOSING:
-            if key == pygame.K_c:
+            if keyev == None:
+                pass
+            elif keyev.key == pygame.K_c and keyev.type == pygame.KEYDOWN:
                 print("closing")
                 self.count -= 3
+                if self.count < 0:
+                    self.count = 0
+                    self.state = DoorState.CLOSE
             else:
                 print("close cancel")
 
@@ -135,7 +146,6 @@ class GameLoop(GameState):
         wall_l = tr(game_cord) @ mirror_x() @ np.array([230,0,1])
         draw_center_rect(wall_l,(180,self.DOORSIZE[1]),MOSGREEN)
 
-        self.prev_key = key
         return
 
 
@@ -162,7 +172,7 @@ if __name__ == '__main__':
     g = GameLoop()
 
     while running:
-        key = None
+        keyev = None
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -172,9 +182,14 @@ if __name__ == '__main__':
                     print("quit")
                     running = False
                 else:
-                    key = event.key
+                    keyev = event
+            elif event.type == pygame.KEYUP:
+                keyev = event
 
-        g.do(key)
+        if not keyev is None:
+            print(keyev)
+
+        g.do(keyev)
 #        if g.do(key):
 #            g = GameLoop()
         pygame.display.update()
