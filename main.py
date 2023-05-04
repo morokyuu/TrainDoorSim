@@ -94,7 +94,7 @@ class GameLoop(GameState):
         self.YPOS = 200
         self.count = 0
         self.state = DoorState.CLOSE
-        self.STEPMAX=50
+        self.STEPMAX=35
         self.prev_key = None
 
     def door(self,keyev):
