@@ -105,7 +105,7 @@ class GameLoop(GameState):
                 print("open")
                 self.state = DoorState.OPENNING
         elif self.state == DoorState.OPENNING:
-            self.count += 3
+            self.count += 1
             if self.count > self.STEPMAX:
                 self.count = self.STEPMAX
                 self.state = DoorState.OPEN
@@ -118,14 +118,14 @@ class GameLoop(GameState):
         elif self.state == DoorState.CLOSING:
             if keyev == None:
                 pass
-            elif keyev.key == pygame.K_c and keyev.type == pygame.KEYDOWN:
-                print("closing")
-                self.count -= 3
-                if self.count < 0:
-                    self.count = 0
-                    self.state = DoorState.CLOSE
-            else:
+            elif keyev.key == pygame.K_c and keyev.type == pygame.KEYUP:
                 print("close cancel")
+                self.state = DoorState.OPENNING
+
+            self.count -= 1
+            if self.count < 0:
+                self.count = 0
+                self.state = DoorState.CLOSE
 
         self.posx = self.count / self.STEPMAX * self.DOORSIZE[0]
 
