@@ -127,7 +127,8 @@ class GameLoop(GameState):
                 self.count = 0
                 self.state = DoorState.CLOSE
 
-        self.posx = self.count / self.STEPMAX * self.DOORSIZE[0]
+        #self.posx = self.count / self.STEPMAX * self.DOORSIZE[0]
+        self.posx = np.sqrt((self.count / self.STEPMAX) **1.1) * self.DOORSIZE[0]
 
         game_cord = np.array([640//2, self.YPOS, 1])
         door_r = tr(game_cord) @ tr(np.array([self.posx,0])) @ np.array([self.DOORSIZE[0]//2, 0,1])
