@@ -97,12 +97,16 @@ class GameLoop(GameState):
         self.STEPMAX=35
         self.prev_key = None
 
+        files = {'open': "door_open.mp3", 'close': "door_close.mp3"}
+        self.sound_effect = {f: pygame.mixer.Sound("./wav/" + files[f]) for f in files.keys()}
+
     def door(self,keyev):
         if self.state == DoorState.CLOSE:
             if keyev == None:
                 pass
             elif keyev.key == pygame.K_o and keyev.type == pygame.KEYDOWN:
                 print("open")
+                self.sound_effect["open"].play()
                 self.state = DoorState.OPENNING
         elif self.state == DoorState.OPENNING:
             self.count += 1
@@ -114,6 +118,7 @@ class GameLoop(GameState):
                 pass
             elif keyev.key == pygame.K_c and keyev.type == pygame.KEYDOWN:
                 print("close")
+                self.sound_effect["close"].play()
                 self.state = DoorState.CLOSING
         elif self.state == DoorState.CLOSING:
             if keyev == None:
