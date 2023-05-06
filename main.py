@@ -94,8 +94,11 @@ class GameLoop(GameState):
         self.YPOS = 200
         self.count = 0
         self.state = DoorState.CLOSE
-        self.STEPMAX=50
+        self.STEPMAX=35
         self.prev_key = None
+
+        files = {'open': "door_open.mp3", 'close': "door_close.mp3"}
+        self.sound_effect = {f: pygame.mixer.Sound("./wav/" + files[f]) for f in files.keys()}
 
     def door(self,keyev):
         if self.state == DoorState.CLOSE:
@@ -103,6 +106,7 @@ class GameLoop(GameState):
                 pass
             elif keyev.key == pygame.K_o and keyev.type == pygame.KEYDOWN:
                 print("open")
+                self.sound_effect["open"].play()
                 self.state = DoorState.OPENNING
         elif self.state == DoorState.OPENNING:
             self.count += 1
@@ -114,6 +118,7 @@ class GameLoop(GameState):
                 pass
             elif keyev.key == pygame.K_c and keyev.type == pygame.KEYDOWN:
                 print("close")
+                self.sound_effect["close"].play()
                 self.state = DoorState.CLOSING
         elif self.state == DoorState.CLOSING:
             if keyev == None:
@@ -127,7 +132,8 @@ class GameLoop(GameState):
                 self.count = 0
                 self.state = DoorState.CLOSE
 
-        self.posx = self.count / self.STEPMAX * self.DOORSIZE[0]
+        #self.posx = self.count / self.STEPMAX * self.DOORSIZE[0]
+        self.posx = np.sqrt((self.count / self.STEPMAX) **1.1) * self.DOORSIZE[0]
 
         game_cord = np.array([640//2, self.YPOS, 1])
         door_r = tr(game_cord) @ tr(np.array([self.posx,0])) @ np.array([self.DOORSIZE[0]//2, 0,1])
